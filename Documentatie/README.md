@@ -11,7 +11,7 @@ Wij willen dit realiseren op de passieve mannier met een gewone ethercap methode
 In een document loggen we dan alle unsecure data waar we een username en wachtwoord uit kunnen halen.
 Vervolgens posten we dit naar onze php server waar een lijst terecht komt met alle gebruikersnamen en wachtwoorden. (Wall of sheep)
 
-###Benodigtheden
+###Benodigdheden
 
 * Router die ons netwerk voorstelt
 * Raspberry pi ( onze hacking module )
@@ -19,3 +19,13 @@ Vervolgens posten we dit naar onze php server waar een lijst terecht komt met al
 * Target laptop waar we het verkeer van afluisteren
 * php server ( hier komt de wall of sheep op terecht )
 
+###Software die nodig was
+
+####Laptop
+* Xamp ( simuleren van php server)
+
+####Raspberry pi
+* Debian (linux distributie, KALI)
+* ethercap
+* tightVNC ( grafische weergave )
+* Apache
