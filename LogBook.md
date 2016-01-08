@@ -18,10 +18,10 @@
 * testing ettercap
 
 #10/12/2015
-* testing ettercap; does this even work?
+* testing ettercap, does this even work?
 
 #17/12/2015
-* Ettercap werkend krijgen voor passwoorden en usernames weg te schrijven naar log file, de dees werkt echt ni
+* Ettercap werkend krijgen voor passwoorden en usernames weg te schrijven naar log file, dees werkt echt ni
 
 #08/01/2016
 * ettercap buitenggegooid en overgestapt naar mimtf, dit werkt (veel beter).
