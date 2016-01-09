@@ -27,3 +27,9 @@
 * ettercap buitenggegooid en overgestapt naar mimtf, dit werkt (veel beter).
 * logfile proberen weg te schrijven
 * informatie uit logfile halen
+
+#09/01/2016 
+* logfile uit mitmf halen en verplaatsen naar php map
+* logfile in php filteren op gewenste info
+* gewenste info tonen op de php server
+* wachtwoorden enkele letters laten zien zonder volledig passwoord
