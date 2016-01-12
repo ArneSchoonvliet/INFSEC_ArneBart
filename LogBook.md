@@ -33,3 +33,7 @@
 * logfile in php filteren op gewenste info
 * gewenste info tonen op de php server
 * wachtwoorden enkele letters laten zien zonder volledig passwoord
+
+#10/01/2016
+* aansturen met knoppen 
+* apache starten bij boot-up
