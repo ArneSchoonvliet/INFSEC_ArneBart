@@ -4,7 +4,7 @@
 
 ###Opdracht
 
-In ons derde jaar op AP Hogeschool wordt er van ons verwacht een pakket te maken die automatisch het netwerk snift opzoek naar wachtwoorden. We doen dit door middel van een raspberry pi. Als we een wachtwoord vinden zal dit weergegeven worden via een server op het scherm. We hadden hiervan al een naslag werk van gekregen van studenten van vorig jaar. Na het lezen van hun project zijn we tot de conclusie gekomen dat ze het enkel werkend hebben gekregen door middel van een hub. Ons doel is om dit via Wifi te doen. Wij maken deze opdracht in groepjes van twee. 
+In ons derde jaar op AP Hogeschool wordt er van ons verwacht een pakket te maken die automatisch het netwerk snift opzoek naar wachtwoorden. We doen dit door middel van een Raspberry Pi. Als we een wachtwoord vinden zal dit weergegeven worden via een server op het scherm. We hadden hiervan al een naslag werk van gekregen van studenten van vorig jaar. Na het lezen van hun project zijn we tot de conclusie gekomen dat ze het enkel werkend hebben gekregen door middel van een hub. Ons doel is om dit via Wifi te doen. Wij maken deze opdracht in groepjes van twee. 
 Het doel van dit project is dat onze kennis wordt getest en dat we op zelfstandige basis een project kunnen uitvoeren.
 
 In ons project hebben we een aantal doelstellingen. Een zeer belangrijke hiervan is het plannen en het verdelen van taken. We werken in een groep van twee. Hier moet zeker de nodige planning gebeuren willen we tot een succesvolle project komen. We leren hier bepaalde technieken voor die ons hierbij kunnen helpen!
@@ -18,11 +18,11 @@ Bart Kerstens, Arne Schoonvliet
 
 ###Verloop van de opdracht
 
-Onze eerste bedoeling was om het netwerk passief te sniffen op packetten in de lucht. Uiteindelijk hebben ze dit niet kunnen doen gezien ze ettercap niet werkend kregen in promiscous mode. Daarna hebben we geprobeerd om een actieve ARP uit te voeren op het netwerk. Dit hebben we een aantal weken geprobeerd zonder succes. Ethercap was niet in staat om het netwerk te sniffen en dit naar een bestand te loggen. Op aanraden van een collega zijn we dan overgestapt naar Man-In-The-Middle-Framework. Dankzij deze overstap hebben we succesvol op het doelnetwerk onze sniff kunnen uitvoeren. Hierdoor waren we in staat om alle nuttige info die we konden gebruiken over te zetten in een logfile. Om deze logfile uit te lezen hebben we een php script geschreven dat op de apache server van de Raspberry pi draait. Indien men naar het adres van de pi surft kan men de ARP aanval starten, de logs binnenhalen van de aanval of de Raspberry pi uitschakelen. Hoe dit allemaal gebeurd wordt hieronder allemaal uitgelegd.
+Onze eerste bedoeling was om het netwerk passief te sniffen op pakketten in de lucht. Uiteindelijk hebben ze dit niet kunnen doen gezien ze ettercap niet werkend kregen in promiscous mode. Daarna hebben we geprobeerd om een reverse ARP uit te voeren op het netwerk. Dit hebben we een aantal weken geprobeerd zonder succes. Ettercap was niet in staat om het netwerk te sniffen en dit naar een bestand te loggen. We hebben hier spijtig genoeg heel veel tijd mee verloren en nog steeds het probleem niet gevonden. Op aanraden van Brecht Carlier zijn we overgestapt naar Man-In-The-Middle-Framework. Dankzij deze overstap hebben met success het netwerk kunnen sniffen. Hierdoor waren we in staat om alle nuttige info die we konden gebruiken over te zetten in een logfile. Om deze logfile uit te lezen hebben we een php script geschreven dat op de Apache server van de Raspberry pi draait. Indien men naar het adres van de pi surft kan men de ARP aanval starten, de logs binnenhalen van de aanval of de Raspberry pi uitschakelen. Hoe we dit allemaal gerealiseerd hebben word hieronder uitgelegd.
 
 ###Benodigdheden
 
-* Router die ons netwerk voorstelt
+* Accesspoint/router die ons netwerk voorsteld
 * Raspberry pi ( onze hacking module )
 * Target laptop waar we het verkeer van afluisteren
 
@@ -34,21 +34,20 @@ Onze eerste bedoeling was om het netwerk passief te sniffen op packetten in de l
 
 ####Raspberry pi
 * Debian (linux distributie, KALI)
-* ethercap ( vervangen door MITMF)
+* ettercap ( vervangen door MITMF)
 * tightvnc ( grafische weergave/ remote desktop )
 * Apache
 * Man-in-the-middle-framework
 
 ##Let's get to work
 
-####Debian image op SD-card plaatsen
-*Om dit te doen maken we gebruik van een tool voor de image op de SD-Card te zetten*
+#### Debian image op SD-card plaatsen
+Om dit te doen maken we gebruik van een tool voor de image op de SD-Card te zetten. We hebben ervoor gekozen om Kali linux op onze Raspberry pi te zetten. Dit is een linux distributie dat men kan gebruiken als tool voor het pentesten en sniffen van een netwerk. Men kan deze image file vinden op de kali website. 
 ![Printscreen Tool](http://a.fsdn.com/con/app/proj/win32diskimager/screenshots/win32-imagewriter.png)
 
-Wanneer dit gelukt is kunnen we de SD-card in de Rasberry pi plaatsen en hem booten met de nieuwe image.
+Wanneer dit gelukt is kunnen we de SD-card in de Rasberry pi plaatsen en hem booten met de nieuwe image. We moeten natuurlijk de Pi op een scherm aansluiten en zo ook een muis en toetsenbord. 
 
 ###Next step
-
 Als de Pi succesvol geboot is kunnen we er dingen op beginnen instellen:
 * Remote desktop instellen zodat we het bureaublad kunnen zien (tightVNC)
 * Drivers voor ethercap
@@ -157,4 +156,6 @@ Knoppen waar we alle functies mee gaan uitvoeren.
 ####PHP 
 
 VOOR MORGE SCHUP AFGEKUIST
+
+
 
