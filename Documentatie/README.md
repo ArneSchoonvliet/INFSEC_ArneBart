@@ -86,11 +86,19 @@ Als je daarna een client download op je windows machine heb je nu toegang tot ee
 ####ethercap
 *software die op de Pi geïnstalleerd word*
 
-Ethercap kan gebruikt worden voor passieve en actieve dissectie van veel protocollen ( zelfs degene die gecodeerd zijn).
-Het bevat ook veel functies voor een analyse uit te voeren van een host of van het netwerk waar hij zich op bevind.
-Wij gebruiken dit vooral voor pakketjes met gevoelige informatie uit de lucht te halen en deze te loggen in een bestand.
+Ettercap is een open source tool voor man in the middle aanvallen op een netwerk. Het heeft ontzettend veel opties in verband met sniffing van verschillende protocollen. Ons doel was om deze tool te gebruiken om het wifi netwerk te scannen (al dan niet met arp poisoning) om zo wachtwoorden te verkrijgen van de mensen die op het netwerk zitten. Uit het naslag werk van vorig jaar konden we afleiden dat het werken met ettercap niet moeilijk is. Maar in de praktijk bleek dit toch anders te zijn. We kregen het niet voor elkaar om ettercap te laten sniffen van het netwerk. Na hulp van de leerkracht te vragen en ook aan vrienden hadden we de moed al een beetje opgegeven. Na aanraden van Brecht Carlier zijn we in de laatste weken gaan kijken naar een andere man in the middle tool. 
 
-*Disclaimer: spijtig genoeg hebben we na enkele weken geconstateerd dat we ethercap niet werkend kregen voor de toepassing die we voor ogen hadden.*
+#### installatie ettercap
+Installatie van ettercap was eenvoudig. Met onderstaande vier lijnen was ettercap geïnstalleerd
+
+```
+sudo apt-get install zlib1g zlib1g-dev 
+sudo apt-get install build-essential 
+sudo apt-get install ettercap 
+sudo apt-get install ettercap-text
+```
+
+
 
 ####Python
 
