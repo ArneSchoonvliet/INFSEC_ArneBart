@@ -4,7 +4,7 @@
 
 ###Opdracht
 
-In ons derde jaar op AP Hogeschool wordt er van ons verwacht een pakket te maken die automatisch het netwerk snift opzoek naar wachtwoorden. We doen dit door middel van een Raspberry Pi. Als we een wachtwoord vinden zal dit weergegeven worden via een server op het scherm. We hadden hiervan al een naslag werk van gekregen van studenten van vorig jaar. Na het lezen van hun project zijn we tot de conclusie gekomen dat ze het enkel werkend hebben gekregen door middel van een hub. Ons doel is om dit via Wifi te doen. Wij maken deze opdracht in groepjes van twee. 
+In ons derde jaar op AP Hogeschool wordt er van ons verwacht een pakket te maken die automatisch het netwerk snift opzoek naar wachtwoorden. We doen dit door middel van een rasberry pi. Als we een wachtwoord vinden zal dit weergegeven worden via een server op het scherm. We hadden hiervan al een naslag werk van gekregen van studenten van vorig jaar. Na het lezen van hun project zijn we tot de conclusie gekomen dat ze het enkel werkend hebben gekregen door middel van een hub. Ons doel is om dit via Wifi te doen. Wij maken deze opdracht in groepjes van twee. 
 Het doel van dit project is dat onze kennis wordt getest en dat we op zelfstandige basis een project kunnen uitvoeren.
 
 In ons project hebben we een aantal doelstellingen. Een zeer belangrijke hiervan is het plannen en het verdelen van taken. We werken in een groep van twee. Hier moet zeker de nodige planning gebeuren willen we tot een succesvolle project komen. We leren hier bepaalde technieken voor die ons hierbij kunnen helpen!
@@ -18,7 +18,7 @@ Bart Kerstens, Arne Schoonvliet
 
 ###Verloop van de opdracht
 
-Onze eerste bedoeling was om het netwerk passief te sniffen op pakketten in de lucht. Uiteindelijk hebben ze dit niet kunnen doen gezien ze ettercap niet werkend kregen in promiscous mode. Daarna hebben we geprobeerd om een reverse ARP uit te voeren op het netwerk. Dit hebben we een aantal weken geprobeerd zonder succes. Ettercap was niet in staat om het netwerk te sniffen en dit naar een bestand te loggen. We hebben hier spijtig genoeg heel veel tijd mee verloren en nog steeds het probleem niet gevonden. Op aanraden van Brecht Carlier zijn we overgestapt naar Man-In-The-Middle-Framework. Dankzij deze overstap hebben met success het netwerk kunnen sniffen. Hierdoor waren we in staat om alle nuttige info die we konden gebruiken over te zetten in een logfile. Om deze logfile uit te lezen hebben we een php script geschreven dat op de Apache server van de Raspberry pi draait. Indien men naar het adres van de pi surft kan men de ARP aanval starten, de logs binnenhalen van de aanval of de Raspberry pi uitschakelen. Hoe we dit allemaal gerealiseerd hebben word hieronder uitgelegd.
+Onze eerste bedoeling was om het netwerk passief te sniffen op packetten in de lucht. Uiteindelijk hebben ze dit niet kunnen doen gezien ze ettercap niet werkend kregen in promiscous mode. Daarna hebben we geprobeerd om een reverse ARP uit te voeren op het netwerk. Dit hebben we een aantal weken geprobeerd zonder succes. Ettercap was niet in staat om het netwerk te sniffen en dit naar een bestand te loggen. We hebben hier spijtig genoeg heel veel tijd mee verloren en nog steeds het probleem niet gevonden. Op aanraden van Brecht Carlier zijn we overgestapt naar Man-In-The-Middle-Framework. Dankzij deze overstap hebben met success het netwerk kunnen sniffen. Hierdoor waren we in staat om alle nuttige info die we konden gebruiken over te zetten in een logfile. Om deze logfile uit te lezen hebben we een php script geschreven dat op de Apache server van de Raspberry pi draait. Indien men naar het adres van de pi surft kan men de ARP aanval starten, de logs binnenhalen van de aanval of de Raspberry pi uitschakelen. Hoe we dit allemaal gerealiseerd hebben word hieronder uitgelegd.
 
 ###Benodigdheden
 
@@ -29,7 +29,7 @@ Onze eerste bedoeling was om het netwerk passief te sniffen op pakketten in de l
 ###Software die nodig was
 
 ####Laptop
-* putty (programmeren van de Raspberry pi)
+* putty (shh)
 * tightvnc (remote desktop voor Raspberry pi)
 
 ####Raspberry pi
@@ -47,21 +47,32 @@ Om dit te doen maken we gebruik van een tool voor de image op de SD-Card te zett
 
 Wanneer dit gelukt is kunnen we de SD-card in de Rasberry pi plaatsen en hem booten met de nieuwe image. We moeten natuurlijk de Pi op een scherm aansluiten en zo ook een muis en toetsenbord. 
 
-###Next step
+### Next step
 Als de Pi succesvol geboot is kunnen we er dingen op beginnen instellen:
+* ssh instellen zodat we toegang hebben via putty
 * Remote desktop instellen zodat we het bureaublad kunnen zien (tightVNC)
-* Drivers voor ethercap
+* Ettercap installeren (text based)
 * Apache (voor script en log op te laten verschijnen)
-* Python script voor IP doorsturen
+* Python mailer script voor IP doorsturen
 
-Bovenstaande moeten allemaal eerst gedownload worden, dit wil weggen dat de pi op een netwerk verbonden moet zijn.
-Om dit te kunnen realiseren wordt op een laptop de internet verbinding gedeeld door hem als DHCP in te stellen, hierdoor ontvangt de pi een IP adres.
+De meesten van deze tools moeten allemaal eerst gedownload worden, dit wil weggen dat de pi op een netwerk met internet verbonden moet zijn.
+Om dit te kunnen realiseren zorgen we ervoor dat het school netwerk zijn internet via wifi doorgesluist word naar de lan poort. Je doet dit door naar netwerkcentrum te gaan dan naar adapters om uiteindelijk naar de eigenschappen van de wifi adapter te gaan. In de tab delen kan men toestaan dat andere netwerkgebruikers toegang hebben tot internet via zijn netwerk. Er wordt een DHCP server gestart in windows en zal dus ook een IP address uitdelen aan de PI. 
 
-####tightvnc
+![wifi](http://i.imgur.com/btWxHSI.png)
+
+#### Bepalen IP Raspberry Pi
+We weten niet welk IP adres de Pi heeft gekregen van de DHCP server. We weten dat het in het 192.168.137.* netwerk is. Dus we gaan een ip scan doen met nmap. [Nmap](https://nmap.org/download.html) kan je hier downloaden. Door middel van dit commando
+
+```
+nmap -sn 192.168.137.*
+```
+
+Hierna weten we het IP adres van de Pi en kunnen we toegang krijgen via ssh.
+#### tightvnc
 *is een gratis remote controle [software](http://www.tightvnc.com/) packet*
 Service die je kan starten op de Raspberry pi. Dit stelt de gebruiker in staat om op zijn computer een virtueel extern scherm te maken voor de Raspberry pi.
 
-####ethercap
+####ettercap
 *software die op de Pi geïnstalleerd word*
 
 Ethercap kan gebruikt worden voor passieve en actieve dissectie van veel protocollen ( zelfs degene die gecodeerd zijn).
@@ -156,6 +167,7 @@ Knoppen waar we alle functies mee gaan uitvoeren.
 ####PHP 
 
 VOOR MORGE SCHUP AFGEKUIST
+
 
 
 
