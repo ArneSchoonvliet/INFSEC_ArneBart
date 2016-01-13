@@ -56,6 +56,8 @@ Als de Pi succesvol geboot is kunnen we er dingen op beginnen instellen:
 * Python mailer script voor IP doorsturen
 
 De meesten van deze tools moeten allemaal eerst gedownload worden, dit wil weggen dat de pi op een netwerk met internet verbonden moet zijn.
+Om dit te kunnen realiseren wordt op een laptop de internet verbinding gedeeld door hem als DHCP in te stellen, hierdoor ontvangt de pi een IP adres.
+
 Om dit te kunnen realiseren zorgen we ervoor dat het school netwerk zijn internet via wifi doorgesluist word naar de lan poort. Je doet dit door naar netwerkcentrum te gaan dan naar adapters om uiteindelijk naar de eigenschappen van de wifi adapter te gaan. In de tab delen kan men toestaan dat andere netwerkgebruikers toegang hebben tot internet via zijn netwerk. Er wordt een DHCP server gestart in windows en zal dus ook een IP address uitdelen aan de PI. 
 
 ![wifi](http://i.imgur.com/btWxHSI.png)
@@ -69,10 +71,19 @@ nmap -sn 192.168.137.*
 
 Hierna weten we het IP adres van de Pi en kunnen we toegang krijgen via ssh.
 #### tightvnc
-*is een gratis remote controle [software](http://www.tightvnc.com/) packet*
-Service die je kan starten op de Raspberry pi. Dit stelt de gebruiker in staat om op zijn computer een virtueel extern scherm te maken voor de Raspberry pi.
+Soms is het eenvoudiger om via de gui te werken op de Pi. Maar we hebben niet altijd een scherm tot onze beschikking en laat staan genoeg hdmi naar dvi converters. We moesten dus opzoek naar een alternatief. Na wat zoeken zijn we tot de conclusie gekomen dat we VNC (Virtual network computing) nodig hebben. Op de officiele website staat een mooie tutorial hoe je tightvnc installeert en gebruikt. 
+```
+sudo apt-get install tightvncserver
+```
+Hiermee installeer je tightvnc
 
-####ettercap
+```
+tightvncserver
+```
+Hiermee start je de server
+
+Als je daarna een client download op je windows machine heb je nu toegang tot een virtueel scherm!
+####ethercap
 *software die op de Pi geïnstalleerd word*
 
 Ethercap kan gebruikt worden voor passieve en actieve dissectie van veel protocollen ( zelfs degene die gecodeerd zijn).
@@ -167,7 +178,5 @@ Knoppen waar we alle functies mee gaan uitvoeren.
 ####PHP 
 
 VOOR MORGE SCHUP AFGEKUIST
-
-
 
 
