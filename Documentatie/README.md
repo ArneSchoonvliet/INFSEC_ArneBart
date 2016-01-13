@@ -83,12 +83,12 @@ tightvncserver
 Hiermee start je de server
 
 Als je daarna een client download op je windows machine heb je nu toegang tot een virtueel scherm!
-####ethercap
+#### Ettercap
 *software die op de Pi geïnstalleerd word*
 
 Ettercap is een open source tool voor man in the middle aanvallen op een netwerk. Het heeft ontzettend veel opties in verband met sniffing van verschillende protocollen. Ons doel was om deze tool te gebruiken om het wifi netwerk te scannen (al dan niet met arp poisoning) om zo wachtwoorden te verkrijgen van de mensen die op het netwerk zitten. Uit het naslag werk van vorig jaar konden we afleiden dat het werken met ettercap niet moeilijk is. Maar in de praktijk bleek dit toch anders te zijn. We kregen het niet voor elkaar om ettercap te laten sniffen van het netwerk. Na hulp van de leerkracht te vragen en ook aan vrienden hadden we de moed al een beetje opgegeven. Na aanraden van Brecht Carlier zijn we in de laatste weken gaan kijken naar een andere man in the middle tool. 
 
-#### installatie ettercap
+##### Installatie ettercap
 Installatie van ettercap was eenvoudig. Met onderstaande vier lijnen was ettercap geïnstalleerd
 
 ```
@@ -97,22 +97,19 @@ sudo apt-get install build-essential
 sudo apt-get install ettercap 
 sudo apt-get install ettercap-text
 ```
-
-
-
-####Python
-
-Om ons werk te vergemakkelijken hebben we een python script geschreven dat het IP adres van de Pi doorstuurt naar een mailadres van ons.
-Hierdoor kunnen we rechtstreeks verbinding maken met de Pi en de php pagina bekijken met de gevoelige info.
+#### Mailer script
+Om ons werk te vergemakkelijken hebben we een python script gevonden dat het IP adres van de Pi doorstuurt naar een mailadres van ons tijdens start up. Dit werkt natuurlijk enkel als de pi toegang heeft tot het internet. Maar op deze manier moeten we dus niet steeds de nmap tool gebruiken opzoek naar welk IP de Pi heeft gekregen. Als we het IP hebben kunnen we gemakkelijk via putty een ssh verbinding maken naar de Pi.
 
 ![*Het script*](http://i63.tinypic.com/14y78jo.png)
 
-Dit script wordt automatisch uitgevoerd wanneer de pi volledig is opgestart.
+Om ervoor te zorgen dat het python scriptje wordt uitgevoerd bij boot up hebben TODO: UITLEG BB PLAT DUS KAN NIET OPZOEKEN
 
-####Man-in-the-middle-framework
 
-Dit is onze uiteindelijke keuze geworden omdat dit framework ons helpt met ons doel in dit project te bereiken.
-Het in een one-stop-shop voor man-in-the-middle en netwerk aanvallen. Het framework krijgt constant updates en verbeteringen voor bestaande aanvallen.
+####Man-in-the-middle-framework (mitmf)
+Zoals eerder vermeld zijn we overgeschakeld van ettercap naar mitmf. Dit had als voordeel dat we hier wel ons netwerk wel konden sniffen. Het grootste nadeel was dat voor ettercap een php script was die voor ons de wachtwoorden en usernames uit de gesnifte data zal filteren. Voor mitmf bestond dit niet en moesten we dit zelf doen. Bart heeft hier ontzettend goed werk geleverd en het resultaat mag er zeker zijn!
+
+
+Mitmf one-stop-shop voor man-in-the-middle en netwerk aanvallen. Het framework krijgt constant updates en verbeteringen voor bestaande aanvallen.
 
 Normaal was dit framework ontworpen voor belangrijke tekortkomingen bij ethercap op te vangen. Op github is nu een volledige repo toegewijd aan een van nul opgebouwd framework. Het framework is ook zeer eenvoudig te gebruiken.
 
