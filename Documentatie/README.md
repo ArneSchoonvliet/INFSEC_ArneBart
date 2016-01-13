@@ -1,11 +1,19 @@
-#The making of the Wall of Sheep
+﻿#The making of the Wall of Sheep
 
 ##The early beginning
 
 ###Opdracht
 
-Onze opdracht bestond er uit om een project van studenten van vorig jaar verder uit te werken ( of gewoon werkend te krijgen op de passieve manier)
-Hiervoor moesten we eerst hun verslag bekijken en konden we vaststellen dat zij enkel een Wall of Sheep konden realiseren door actief het netwerk te gaan sniffen en via een hub.
+In ons derde jaar op AP Hogeschool wordt er van ons verwacht een pakket te maken die automatisch het netwerk snift opzoek naar wachtwoorden. We doen dit door middel van een raspberry pi. Als we een wachtwoord vinden zal dit weergegeven worden via een server op het scherm. We hadden hiervan al een naslag werk van gekregen van studenten van vorig jaar. Na het lezen van hun project zijn we tot de conclusie gekomen dat ze het enkel werkend hebben gekregen door middel van een hub. Ons doel is om dit via Wifi te doen. Wij maken deze opdracht in groepjes van twee. 
+Het doel van dit project is dat onze kennis wordt getest en dat we op zelfstandige basis een project kunnen uitvoeren.
+
+In ons project hebben we een aantal doelstellingen. Een zeer belangrijke hiervan is het plannen en het verdelen van taken. We werken in een groep van twee. Hier moet zeker de nodige planning gebeuren willen we tot een succesvolle project komen. We leren hier bepaalde technieken voor die ons hierbij kunnen helpen!
+In ons latere leven zullen we hier ook mee te maken krijgen. We zullen ook vindingrijk moeten zijn bij het oplossen van problemen. Niet alles gaat van de eerste keer en we zullen zeker eens een probleem hebben en dat moeten we succesvol kunnen oplossen. Dit zal tevens belangrijk zijn in ons dagelijks leven. Onze werkhouding en ons gedrag binnen de groep en tegenover derden is ook een belangrijke doelstelling!
+
+Het algemeen doel van ons project is dat we in een werkelijke situatie ervaring opdoen. 
+In dit dossier vindt u de schriftelijke neerslag van en de extra informatie van onze taken. Wij wensen jullie nog veel leesplezier.
+
+Bart Kerstens, Arne Schoonvliet
 
 
 ###Verloop van de opdracht
@@ -149,5 +157,4 @@ Knoppen waar we alle functies mee gaan uitvoeren.
 ####PHP 
 
 VOOR MORGE SCHUP AFGEKUIST
-
 
