@@ -1,0 +1,4 @@
+2016-01-14 15:40:42 192.168.2.3 POST Data (ergotherapie.herokuapp.com):
+username=V4mirax&password=Bartje
+2016-01-14 15:42:04 192.168.2.3 POST Data (login.ebiquity.com):
+username=Stijn&password=test1234
