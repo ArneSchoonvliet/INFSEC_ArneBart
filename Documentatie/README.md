@@ -102,8 +102,11 @@ Om ons werk te vergemakkelijken hebben we een python script gevonden dat het IP 
 
 ![*Het script*](http://i63.tinypic.com/14y78jo.png)
 
-Om ervoor te zorgen dat het python scriptje wordt uitgevoerd bij boot up hebben TODO: UITLEG BB PLAT DUS KAN NIET OPZOEKEN
+Om ervoor te zorgen dat het python scriptje wordt uitgevoerd bij boot up hebben we gebruik gemaakt van de crontab. Crontab is een simpele text file die een lijst van commando's uitvoert op een bepaald tijdstip of in ons geval op boot up. In de file staat dit commando.
 
+```
+@reboot python /home/InfSec/mailer.py
+```
 
 ####Man-in-the-middle-framework (mitmf)
 Zoals eerder vermeld zijn we overgeschakeld van ettercap naar mitmf. Dit had als voordeel dat we hier wel ons netwerk wel konden sniffen. Het grootste nadeel was dat voor ettercap een php script was die voor ons de wachtwoorden en usernames uit de gesnifte data zal filteren. Voor mitmf bestond dit niet en moesten we dit zelf doen. Bart heeft hier ontzettend goed werk geleverd en het resultaat mag er zeker zijn!
@@ -111,7 +114,12 @@ Zoals eerder vermeld zijn we overgeschakeld van ettercap naar mitmf. Dit had als
 
 Mitmf one-stop-shop voor man-in-the-middle en netwerk aanvallen. Het framework krijgt constant updates en verbeteringen voor bestaande aanvallen.
 
-Normaal was dit framework ontworpen voor belangrijke tekortkomingen bij ethercap op te vangen. Op github is nu een volledige repo toegewijd aan een van nul opgebouwd framework. Het framework is ook zeer eenvoudig te gebruiken.
+Normaal was dit framework ontworpen voor belangrijke tekortkomingen bij ettercap op te vangen. Op github is nu een volledige repo toegewijd aan een van nul opgebouwd framework. Het framework is ook zeer eenvoudig te gebruiken.
+
+Instalatie van mitmf is eenvoudig zoals hieronder kan zien.
+```
+apt-get install mitmf
+```
 
 ##De volgende stap
 
@@ -146,8 +154,16 @@ else
 rm /usr/share/mitmf/logs/mitmf.log
 fi
 
-mitmf -i eth0 --gateway 192.168.2.1 -- spoof --arp //magic line that makes it run
+mitmf -i eth0 --gateway 192.168.2.1 -- spoof --arp
 ```
+
+Wat gebeurd er nu eigenlijk met dit commando hieronder. 
+```
+mitmf -i eth0 --gateway 192.168.2.1 --  spoof --arp
+```
+We roepen mitmf aan en zeggen dat deze moet gaan spoofen op interface eth0. Daarna stellen we de default gateway. Als laatste gaan we instellen dat we arp spoofing gaan doen. Wat is arp spoofing nu eigenlijk. De aanvaller, in ons geval de Pi, zal arp pakketjes sturen op het netwerk. Het doel is om de Pi zijn mac address te linken aan een IP adres van een andere host, in ons geval de default gateway. Dit zorgt ervoor dat de data bedoeld voor de default gateway naar onze Pi komt. 
+
+![arpspoofing](https://upload.wikimedia.org/wikipedia/commons/3/33/ARP_Spoofing.svg)
 
 We gebruiken de *[START](#vragenobject)* knop op de index.php pagina om dit uit te laten voeren. *(later hier meer over)*
 
