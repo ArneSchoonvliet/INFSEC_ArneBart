@@ -128,7 +128,7 @@ Nu we alle services en software hebben op onze Raspberry gaan we hem instellen
 ###Putty
 Eerst maken we verbinding met de Raspberry pi. Dit doen we door onze email na te kijken, hier krijgen we een mail met het IP van de Raspberry pi eenmaal deze is opgestart. Vervolgens gebruiken we dit IP-addres om te verbinden via putty.
 
-####foto putty hier
+![](http://i63.tinypic.com/11hfjo4.jpg)
 
 Dan inloggen als admin. Inloggegevens:  
 * User: root 
@@ -136,36 +136,9 @@ Dan inloggen als admin. Inloggegevens:
 
 ###tightvnc 
 Natuurlijk willen we iets zien buiten een commando scherm, daarom starten we tightvncserver op.
-#### foto tightvnc pc als pi
+![](http://i66.tinypic.com/wv1gmq.png)
 
 ##Schrijven van de code
-
-###Shell script Start.sh
-
-Het bestand start.sh bevat onze volledige code voor de ARP spoofing te starten.
-Eerst gaan we kijken of er nog een log file staat van de vorige keer dat de aanval werd uitgevoerd.
-Dit bestand kan oude data bevatten en daarom verwijderen we dit.
-Nadat dit gebeurd is starten we de ARP spoofing met een simpel commando.
-```python
-if [ ! -f /usr/share/mimtf/logs/mitmf.log]
-then
-echo "file not found";
-else
-rm /usr/share/mitmf/logs/mitmf.log
-fi
-
-mitmf -i eth0 --gateway 192.168.2.1 -- spoof --arp
-```
-
-Wat gebeurd er nu eigenlijk met dit commando hieronder. 
-```
-mitmf -i eth0 --gateway 192.168.2.1 --  spoof --arp
-```
-We roepen mitmf aan en zeggen dat deze moet gaan spoofen op interface eth0. Daarna stellen we de default gateway. Als laatste gaan we instellen dat we arp spoofing gaan doen. Wat is arp spoofing nu eigenlijk. De aanvaller, in ons geval de Pi, zal arp pakketjes sturen op het netwerk. Het doel is om de Pi zijn mac address te linken aan een IP adres van een andere host, in ons geval de default gateway. Dit zorgt ervoor dat de data bedoeld voor de default gateway naar onze Pi komt. 
-
-![arpspoofing](https://upload.wikimedia.org/wikipedia/commons/3/33/ARP_Spoofing.svg)
-
-We gebruiken de *[START](#vragenobject)* knop op de index.php pagina om dit uit te laten voeren. *(later hier meer over)*
 
 
 ###Apache
@@ -183,6 +156,9 @@ update-rc.d apache2 defaults
 ###Index.PHP
 
 Als we nu naar de site zouden gaan die op de php server staat is deze leeg. We gaan alles in php schrijven om de aanval vanuit deze pagina te kunnen doen. Dit houd in: een *[START](#START)* knop om de aanval te starten, een *[LOG](#LOG)* knop waar we de log bestanden mee opvragen en een *[STOP](#STOP)* knop om de aanval te stoppen. Tevens laat de pagina ook de status van het programma zien. Hierdoor weet je of het af staat, aan het opstarten is, of al bezig is.
+![](http://i68.tinypic.com/20ti0qb.png)
+![](http://i68.tinypic.com/14e04rr.png)
+![](http://i65.tinypic.com/2yorhqs.png)
 
 ####HTML & PHP
 
@@ -233,7 +209,7 @@ $filename = '/var/www/html/logfile.log';
 $mitmffile = '/usr/share/mitmf/logs/mitmf.log';
 $stop = "sudo kill $(ps aux | grep '[m]itmf' | awk '{print $2}')";
 ```
-#####START ARP 
+#####START ARP<a name ="START">
 
 Om onze aanval uit te voeren moeten we enkel op de *START ARP* knop duwen. Wanneer dit gebeurd wordt de methode *runhack()* in ons programma aangeroepen. 
 
@@ -270,20 +246,29 @@ Het $commando bevat het volgende:
 * mitmf: service die de aanval uitvoert
 * -i: de interface waar we deze gaan uitvoeren
 * --gateway: de gateway die we gaan overnemen
-* --spoof: alles loggen naar een bestand
+* --spoof: vervalsen van identiteit
 * --arp: type van de aanval die we uitvoeren
 
-Voor de aanval gestart werd zagen onze draaiende proccessen als volgend uit:
-*foto ps aux voor hack*
+Wat gebeurd er nu eigenlijk met dit commando hieronder. 
+```
+mitmf -i eth0 --gateway '.$default.' --spoof --arp
+```
+We roepen mitmf aan en zeggen dat deze moet gaan spoofen op interface eth0. Daarna stellen we de default gateway. Als laatste gaan we instellen dat we arp spoofing gaan doen. Wat is arp spoofing nu eigenlijk. De aanvaller, in ons geval de Pi, zal arp pakketjes sturen op het netwerk. Het doel is om de Pi zijn mac address te linken aan een IP adres van een andere host, in ons geval de default gateway. Dit zorgt ervoor dat de data bedoeld voor de default gateway naar onze Pi komt. 
+
+![arpspoofing](https://upload.wikimedia.org/wikipedia/commons/3/33/ARP_Spoofing.svg)
+
+Voor de aanval gestart werd zagen onze draaiende processen als volgend uit:
+![](http://i66.tinypic.com/zml6z6.png)
 Na de start van de aanval zal de status van de pagina veranderen van: *service not running* naar *programm launching*.
-Onze process tabel ziet er dan als volgend uit:
-*foto ps aux na start*
-Omdat we het op een trage Raspberry pi runnen heeft het programma ongeveer 40 seconden nodig om op te starten. Als dit gebeurd is zal status op de pagina veranderen van: *programm launching* naar *programm running*. Onze process tabel ziet er dan als volgend uit:
-*foto ps aux volledig gestart*
+Onze proces tabel ziet er dan als volgend uit:
+![](http://i67.tinypic.com/6qux6x.png)
+Omdat we het op een trage Raspberry pi runnen heeft het programma ongeveer 40 seconden nodig om op te starten. Als dit gebeurd is zal status op de pagina veranderen van: *programm launching* naar *programm running*. Onze proces tabel ziet er dan als volgend uit:
+![](http://i67.tinypic.com/6qux6x.png)
 Het programma zal nu all het verkeer dat door de default gateway in het oog houden en wegschrijven naar een logfile.
 
-#####LOG
-Omdat we bij de Wall of sheep enkel de gebruikersnaam/mail en wachtwoorden laten zien (en de website) zullen we de grote logfile waar al het verkeer in terecht komt moeten filteren. Dit gebeurd vanaf het moment dat de gebruiker de files opvraagt aan de server.
+#####LOG<a name ="LOG">
+Omdat we bij de Wall of sheep enkel de gebruikersnaam/mail en wachtwoorden laten zien (en de website) zullen we de grote logfile waar al het verkeer in terecht komt moeten filteren. Dit gebeurd vanaf het moment dat de gebruiker de files opvraagt aan de server. Hieronder vind u een foto van een ongefilterd logbestand.
+![](http://i67.tinypic.com/34yczn9.png)
 
 ```
 if(isset($_GET['LOG']))
@@ -292,7 +277,8 @@ WallofSheep($filename);
 }
 ```
 We geven hier de variabele *$filename* aan mee omdat we deze nodig hebben in onze methode.
-Hier gaan we nakijken of we nog een logfile hebben van en vorige keer en deze verwijderen moest dit het geval zijn. Hier op volgend gaan we de originele log file kopiëren en in de huidige map plaatsen. Dit staat ons toe om bewerking op de lokale log file uit te voeren. De lokale logfile wordt gefilterd op de keywords *POST* en *pass*. Dit doen we omdat we hierdoor alle POSTs er uit kunnen halen en alle zinnen met een wachtwoord in. Deze zetten we in een andere file net de naam *pass2.txt* .
+Hier gaan we nakijken of we nog een logfile hebben van en vorige keer en deze verwijderen moest dit het geval zijn. Hier op volgend gaan we de originele log file kopiëren en in de huidige map plaatsen. Dit staat ons toe om bewerking op de lokale log file uit te voeren. De lokale logfile wordt gefilterd op de keywords *POST* en *pass*. Dit doen we omdat we hierdoor alle POSTs er uit kunnen halen en alle zinnen met een wachtwoord in. Deze zetten we in een andere file net de naam *pass2.txt* . Deze ziet er als volgt uit:
+![](http://i64.tinypic.com/25886xf.png)
 ```
 function WallofSheep($filename){
 
@@ -331,7 +317,7 @@ userinfo($test);
 }
 ```
 ######userinfo($test)
-Deze methode gaat uit alle zinnen die hij binnenkrijgt de username en het passwoord uithalen. Gezien we de passwoorden niet volledig zichtbaar willen maken moeten we bepalen hoeveel er zichtbaar mogen zijn. We hebben ervoor gekowen om 2 characters te laten zien en de rest te vervangen door een '*' . Om de info uit de zinnen te halen moeten we weer op keywoorden gaan zoeken en de zin opsplitsen waar een match gevonden wordt. Na veel trail en error hebben we de onderstaand code geschreven.
+Deze methode gaat uit alle zinnen die hij binnenkrijgt de username en het passwoord uithalen. Gezien we de passwoorden niet volledig zichtbaar willen maken moeten we bepalen hoeveel er zichtbaar mogen zijn. We hebben ervoor gekozen om 2 characters te laten zien en de rest te vervangen door een '*' . Om de info uit de zinnen te halen moeten we weer op keywoorden gaan zoeken en de zin opsplitsen waar een match gevonden wordt. Na veel trail en error hebben we de onderstaand code geschreven.
 ```
 function userinfo($string){
 
@@ -387,7 +373,11 @@ echo "<br>----------<br>";
 }
 
 ```
-#####STOP
+Een log op de site ziet er als volgend uit:
+![](http://i65.tinypic.com/2yorhqs.png)
+
+
+#####STOP<a name ="STOP">
 Om de aanval te stoppen hoeft de gebruiker enkel op de stop knop te duwen. Bovenaan in de variabelen stond het commando ingesteld on de juiste processen te zoeken. Als deze gevonden worden returnen we de *pids*  en wordt een *kill* command hier op worden uitgevoerd.  
 ```
 $stop = "sudo kill $(ps aux | grep '[m]itmf' | awk '{print $2}')";
