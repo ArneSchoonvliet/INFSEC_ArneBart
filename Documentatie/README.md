@@ -292,7 +292,7 @@ WallofSheep($filename);
 }
 ```
 We geven hier de variabele *$filename* aan mee omdat we deze nodig hebben in onze methode.
-Hier gaan we nakijken of we nog een logfile hebben van en vorige keer en deze verwijderen moest dit het geval zijn. Hier op volgend gaan we de originele log file kopieëren en in de huidige map plaatsen. Dit staat ons toe om bewerking op de lokale log file uit te voeren. De lokale logfile wordt gefilterd op de keywords *POST* en *pass*. Dit doen we omdat we hierdoor alle POSTs er uit kunnen halen en alle zinnen met een wachtwoord in. Deze zetten we in een andere file net de naam *pass2.txt* .
+Hier gaan we nakijken of we nog een logfile hebben van en vorige keer en deze verwijderen moest dit het geval zijn. Hier op volgend gaan we de originele log file kopiëren en in de huidige map plaatsen. Dit staat ons toe om bewerking op de lokale log file uit te voeren. De lokale logfile wordt gefilterd op de keywords *POST* en *pass*. Dit doen we omdat we hierdoor alle POSTs er uit kunnen halen en alle zinnen met een wachtwoord in. Deze zetten we in een andere file net de naam *pass2.txt* .
 ```
 function WallofSheep($filename){
 
@@ -302,4 +302,100 @@ exec("rm logfile.log");
 }
 exec("cp /usr/share/mitmf/logs/mitmf.log logfile.log");
 exec('cat logfile.log | grep "POST\|pass" | tee "pass2.txt"');
+```
+Nu moeten we alle zinnen met informatie uit de file *pass2.txt* halen. Dit doen we zodat we enkel de gewenste informatie kunnen laten zien op het log gedeelte van de pagina. Alle zinnen worden in de variabele *$content* gestoken. Vervolgens gaan we onze *better($content)* methode aanroepen en de *$content* hier aan mee geven.
+```
+$content = file("pass2.txt");
+better($content);
+}
+```
+
+Onze methode gaat een foreach loop doen op alle zinnen die we hebben meegegeven. Van elke zin ($test) wordt gekeken of ze bepaalde keywoorden bevatten. Bij de eerste IF gaan we na of de zin het keywoord *email* bevat. Moest dit het geval zijn gaan we deze zin meegeven aan de *emailinfo($test)* methode. Deze behandeld de zinnen met een email. Voor de rest van de zinnen wordt gekeken of ze het keywoord *POST* bevatten. Deze worden direct weergegeven op het scherm. De andere zinnen bevatten het keywoord *username* en worden behandeld door de methode *userinfo($test)*.
+```
+foreach($content as $test)
+{
+if(strpos($test,"email")!== FALSE)
+{
+emailinfo($test);
+}
+else {
+if(strpos($test,"POST")!== FALSE)
+{
+echo "<br>". $test;
+}
+else{
+userinfo($test);
+}
+}
+}
+}
+```
+######userinfo($test)
+Deze methode gaat uit alle zinnen die hij binnenkrijgt de username en het passwoord uithalen. Gezien we de passwoorden niet volledig zichtbaar willen maken moeten we bepalen hoeveel er zichtbaar mogen zijn. We hebben ervoor gekowen om 2 characters te laten zien en de rest te vervangen door een '*' . Om de info uit de zinnen te halen moeten we weer op keywoorden gaan zoeken en de zin opsplitsen waar een match gevonden wordt. Na veel trail en error hebben we de onderstaand code geschreven.
+```
+function userinfo($string){
+
+$raw = explode("name",$string); 
+$raw2 = explode("=",$raw[1]);
+$name = explode("&",$raw2[1]);
+
+$raw = explode("pass",$string); 
+$raw2 = explode("=",$raw[1]);
+$length = strlen($raw2[1]) - 1;
+if(strpos($raw2[1],"&")!== FALSE)
+{
+$raw2 = explode("&",$raw[1]);
+$raw2 = explode("=",$raw2[0]);
+$raw2[1]= $raw2[1];
+$length = strlen($raw2[1]);
+
+}
+$pass = str_pad(substr($raw2[1],0,2),$length,"*");
+echo "<br>----------<br>";
+
+echo "Gebruiker:". $name[0] ."<br>";
+echo "passwoord:". $pass ."<br>";
+
+echo "<br>----------<br>";
+
+}
+
+```
+
+
+######emailinfo($test)
+Deze methode verschilt niet veel van de boventstaande. Deze zal werken met het keywoord *email* ipv *user*. Sommige sites sturen hun email door en vervangen hier '@' door '%40' . Dit presenseert niet mooi dus vervangen we dit terug door het '@'teken. 
+```
+function emailinfo($string)
+{
+$raw = explode("email",$string);
+$raw2 = explode("&",$raw[1]);
+$raw3 = explode("=",$raw2[0]); //searching for email
+$email = str_replace("%40","@",$raw3[1]);
+
+$raw = explode("pass",$string);// searching for password
+$raw2 = explode("=",$raw[1]); 
+$raw3 = explode("&",$raw2[1]);
+$length = strlen($raw3[0]);
+$pass = str_pad(substr($raw3[0],0,2),$length,"*");
+
+echo "<br>----------<br>";
+echo "email: " .$email."<br>";
+echo "passwoord: " .$pass."<br>";
+echo "<br>----------<br>";
+ 
+}
+
+```
+#####STOP
+Om de aanval te stoppen hoeft de gebruiker enkel op de stop knop te duwen. Bovenaan in de variabelen stond het commando ingesteld on de juiste processen te zoeken. Als deze gevonden worden returnen we de *pids*  en wordt een *kill* command hier op worden uitgevoerd.  
+```
+$stop = "sudo kill $(ps aux | grep '[m]itmf' | awk '{print $2}')";
+```
+
+```
+if(isset($_GET['STOP']))
+{
+exec($stop);
+}
 ```
