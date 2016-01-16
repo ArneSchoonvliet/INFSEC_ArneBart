@@ -392,15 +392,9 @@ exec($stop);
 
 ###Stappen plan
 1. Zet door middel van win32diskmanager een raspberry pi compatible linux distributie op een sd kaart (let op! Wheezy of Kali heeft meer dan 4GB sd kaart nodig
-2. Installeer apache met dit commando
-```
-apt-get install apache2 -y
-```
+2. Installeer apache met dit commando```apt-get install apache2 -y```
 3. Ga naar /var/www/html/ en plaat index.php van deze repo daar. Dit script bevat de werking van wall of sheep
-4. Installeer mitmf met dit commando
-```
-apt-get install mitmf
-```
+4. Installeer mitmf met dit commando```apt-get install mitmf```
 5. Surf nu naar het ip adres van de pi en start het programma
 
 Voor automatisch IP krijgen via mailser script raad ik aan om het verslag te lezen. Verder zorg je ervoor dat je root bent.
